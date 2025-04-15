@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  usuario_ID Int     @id @default(autoincrement())
+  nome       String
+  email      String   @unique
+  senha      String
+  itens      Item[]
+}
+
+model Categoria {
+  categoria_ID Int    @id @default(autoincrement())
+  nome         String
+  itens        Item[]
+}
+
+model Item {
+  item_ID       Int      @id @default(autoincrement())
+  nome_objeto   String
+  dataEvento    DateTime
+  localizacao   String
+  foto          String?   // campo opcional
+  status        Int       // 0 = perdido, 1 = encontrado
+  codigoAcesso  String    @unique
+  categoria_ID  Int
+  usuario_ID    Int?
+
+  categoria     Categoria @relation(fields: [categoria_ID], references: [categoria_ID])
+  usuario       Usuario?  @relation(fields: [usuario_ID], references: [usuario_ID])
+}
